@@ -3,72 +3,65 @@ import Home from '@/components/Home.vue'
 import Skills from '@/components/Skills.vue'
 import Contact from '@/components/Contact.vue'
 import Projects from '@/components/Projects.vue'
-import { useStore } from '@/stores';
-import { computed, onMounted, ref } from 'vue';
+import { useStore } from '@/stores'
+import { computed, onMounted, onUnmounted, ref, shallowRef } from 'vue'
 import { throttle } from 'lodash'
 
 const store = useStore()
 const content = ref(null)
-const pages = ref(null)
+const contentRef = computed(() => content.value.$el)
+const pages = ref([
+    { name: 'home', component: shallowRef(Home), offsetTop: 0 },
+    { name: 'skills', component: shallowRef(Skills), offsetTop: 0 },
+    { name: 'projects', component: shallowRef(Projects), offsetTop: 0 },
+    { name: 'contact', component: shallowRef(Contact), offsetTop: 0 }
+])
 const pageIndex = ref(0)
-const isScroll = ref(false)
+const isScrolling = ref(false)
+const isScrollUp = ref(false)
 
-const handleWheel = (e) => {
-    if (isScroll.value) return
+const handleWheel = throttle((e) => {
+    if (isScrolling.value) return
 
-    isScroll.value = true
+    isScrolling.value = true
 
     if (e.deltaY > 0) {
-        // 滑动到下一页
-        if (pageIndex.value < pages.value.length - 1) {
-            pageIndex.value++
-        } else {
-            pageIndex.value = pages.value.length - 1
-        }
+        isScrollUp.value = false
+        // 向下滚动
+        pageIndex.value = Math.min(pageIndex.value + 1, pages.value.length - 1)
     } else {
-        // 滑动到上一页
-        if (pageIndex.value > 0) {
-            pageIndex.value--
-        } else {
-            pageIndex.value = 0
-        }
+        isScrollUp.value = true
+        // 向上滚动
+        pageIndex.value = Math.max(pageIndex.value - 1, 0)
     }
-    // 为指定页添加active类
-    pages.value.forEach((page, index) => {
-        if (index === pageIndex.value) {
-            page.classList.add('active')
-        } else {
-            page.classList.remove('active')
-        }
+
+    contentRef.value.scrollTo({
+        top: pages.value[pageIndex.value].offsetTop,
+        behavior: 'smooth'
     })
-    // 滚动到指定页
-    scrollToPage(pageIndex.value)
 
     setTimeout(() => {
-        isScroll.value = false
+        isScrolling.value = false
     }, 500)
-}
-const scrollToPage = (index) => {
-    const page = pages.value[index]
-    if (page) {
-        // page.scrollIntoView({
-        //     behavior: 'smooth',
-        //     block: 'start',
-        //     inline: 'nearest'
-        // })
-    }
-}
+}, 200)
+
+
 
 onMounted(() => {
-    pages.value = document.querySelectorAll('.page');
-    window.addEventListener('wheel', throttle(handleWheel, 200), { passive: true })
+    document.querySelectorAll('.page').forEach((el, index) => {
+        pages.value[index].offsetTop = el.offsetTop;
+    })
+    window.addEventListener('wheel', handleWheel, { passive: true })
+})
+
+onUnmounted(() => {
+    window.removeEventListener('wheel', handleWheel)
 })
 
 
 </script>
 
 <template>
-    <!-- <HelloWorld :msg="store.title" /> -->
     <Layout class="resume-layout">
 
         <Header class="resume-header">
@@ -81,18 +74,8 @@ onMounted(() => {
         </Header>
 
         <Content ref="content" class="resume-content">
-
-            <!-- 首页 -->
-            <Home class="page active" id="home" />
-
-            <!-- 技能页 -->
-            <Skills class="page" id="skills" />
-
-            <!-- 项目页 -->
-            <Projects class="page" id="projects" />
-
-            <!-- 联系页 -->
-            <Contact class="page" id="contact" />
+            <component v-for="(page, index) in pages" :key="`pages_${page.name}`" :id="page.name" :is="page.component"
+                class="page" :class="{ 'active': pageIndex === index }" />
         </Content>
     </Layout>
 </template>
@@ -140,25 +123,21 @@ onMounted(() => {
 
 
         .page {
-            position: absolute;
-            bottom: 0;
+            // position: absolute;
+            // bottom: 0;
             width: 100%;
             height: 100%;
+            box-shadow: 2px 2px 4px #e8e8e8;
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: all 1s ease;
+            z-index: 1;
 
             &.active {
                 opacity: 1;
-                transform: translateY(0);
-                z-index: 1;
-                transition: all .7s ease;
-            }
-
-            &:not(.active) {
-                opacity: 0;
-                transform: translateY(-100%);
-                transition: all .7s ease .8s;
+                z-index: 2;
+                transition: all 1s ease;
             }
 
 
