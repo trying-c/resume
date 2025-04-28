@@ -20,7 +20,7 @@ const pageIndex = ref(0)
 const isScrolling = ref(false)
 const isScrollUp = ref(false)
 
-const handleWheel = throttle((e) => {
+const handleWheel = (e) => {
     if (isScrolling.value) return
 
     isScrolling.value = true
@@ -43,7 +43,7 @@ const handleWheel = throttle((e) => {
     setTimeout(() => {
         isScrolling.value = false
     }, 500)
-}, 200)
+}
 
 
 
@@ -51,7 +51,7 @@ onMounted(() => {
     document.querySelectorAll('.page').forEach((el, index) => {
         pages.value[index].offsetTop = el.offsetTop;
     })
-    window.addEventListener('wheel', handleWheel, { passive: true })
+    window.addEventListener('wheel', throttle(handleWheel, 200), { passive: true })
 })
 
 onUnmounted(() => {
