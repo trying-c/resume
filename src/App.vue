@@ -35,15 +35,32 @@ const handleWheel = (e) => {
         pageIndex.value = Math.max(pageIndex.value - 1, 0)
     }
 
-    contentRef.value.scrollTo({
-        top: pages.value[pageIndex.value].offsetTop,
-        behavior: 'smooth'
-    })
+    scrollToIndex()
 
     setTimeout(() => {
         isScrolling.value = false
     }, 500)
 }
+
+const scrollToIndex = () => {
+    contentRef.value.scrollTo({
+        top: pages.value[pageIndex.value].offsetTop,
+        behavior: 'smooth'
+    })
+}
+
+const toLast = () => {
+    pageIndex.value--;
+    scrollToIndex()
+}
+
+const toNext = () => {
+    pageIndex.value++;
+    scrollToIndex()
+}
+
+const leftBan = computed(() => pageIndex.value == 0);
+const rightBan = computed(() => pageIndex.value == pages.value.length - 1);
 
 
 
@@ -74,15 +91,63 @@ onUnmounted(() => {
         </Header>
 
         <Content ref="content" class="resume-content">
+            <div class="resume-action">
+                <Button class="link__color" ghost type="text" icon="ios-arrow-back" :disabled="leftBan"
+                    @click="toLast"></Button>
+                <Button class="link__color" ghost type="text" icon="ios-arrow-forward" :disabled="rightBan"
+                    @click="toNext"></Button>
+            </div>
             <component v-for="(page, index) in pages" :key="`pages_${page.name}`" :id="page.name" :is="page.component"
-                class="page" :class="{ 'active': pageIndex === index }" />
+                class="page" :class="[`page_bgImg_${index}`, pageIndex === index ? 'active' : '']" />
         </Content>
     </Layout>
 </template>
 
 <style lang="scss" scoped>
+@for $i from 0 through 5 {
+    .page_bgImg_#{$i} {
+        background-image: url(./assets/images/#{4-$i}.png);
+        background-size: 100% 100%;
+        background-attachment: fixed;
+    }
+}
+
 /* 背景灰 */
 .resume {
+    &-action {
+        position: fixed;
+        width: 120px;
+        height: 100px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 3;
+
+        top: 50px;
+        right: 50px;
+
+        @include responseTo('phone') {
+            top: calc(100% - 120px);
+            right: -50px;
+            transform: rotate(90deg);
+        }
+
+        :deep(.ivu-icon::before) {
+            font-size: 48px;
+        }
+
+        :deep(.ivu-btn) {
+            margin: 10px;
+            border: none;
+            box-shadow: none;
+
+            &:hover {
+                border: none;
+                box-shadow: none;
+            }
+        }
+    }
+
     &-layout {
         background-color: #f0f2f5;
         width: 100%;
@@ -90,7 +155,8 @@ onUnmounted(() => {
     }
 
     &-header {
-        background-color: rgba(255, 255, 255, 0.557);
+        position: fixed;
+        background-color: rgba(255, 255, 255, 0.8);
         border-bottom: 1px solid #e8e8e8;
         width: 100%;
         text-align: center;
@@ -123,8 +189,6 @@ onUnmounted(() => {
 
 
         .page {
-            // position: absolute;
-            // bottom: 0;
             width: 100%;
             height: 100%;
             box-shadow: 2px 2px 4px #e8e8e8;
@@ -133,6 +197,7 @@ onUnmounted(() => {
             align-items: center;
             transition: all 1s ease;
             z-index: 1;
+            color: white;
 
             &.active {
                 opacity: 1;
@@ -140,38 +205,17 @@ onUnmounted(() => {
                 transition: all 1s ease;
             }
 
-
-            /* 颜色应用 */
-            &#home {
-                background: $taro-purple;
-                color: white;
-            }
-
-            &#skills {
-                background: $light-gray;
-                color: $slate-gray;
-            }
-
-            &#projects {
-                background: $slate-gray;
-                color: white;
-            }
-
-            &#contact {
-                background: $golden-yellow;
-                color: $slate-gray;
-            }
-
             :deep(.card) {
                 width: 100%;
                 height: 50%;
                 padding: 3rem;
-                border-radius: 15px;
 
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
+
+                // background-color: rgba(156, 125, 125, 0.4);
             }
 
             &.active :deep(.skill-tag) {
