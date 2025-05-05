@@ -162,14 +162,18 @@ onUnmounted(() => {
         align-items: center;
         z-index: 3;
 
-        top: 50px;
-        right: 50px;
+        // top: 50px;
+        // right: 50px;
 
-        @include responseTo('phone') {
-            top: calc(100% - 120px);
-            right: -50px;
-            transform: rotate(90deg);
-        }
+        // @include responseTo('phone') {
+        //     top: calc(100% - 120px);
+        //     right: -50px;
+        //     transform: rotate(90deg);
+        // }
+
+        top: calc(100% - 120px);
+        right: -50px;
+        transform: rotate(90deg);
 
         :deep(.ivu-icon::before) {
             font-size: 48px;
@@ -195,8 +199,8 @@ onUnmounted(() => {
 
     &-header {
         position: fixed;
-        background-color: rgba(255, 255, 255, 0.8);
-        border-bottom: 1px solid #e8e8e8;
+        background-color: transparent;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         width: 100%;
         text-align: center;
         padding: 8px 20px;
@@ -247,14 +251,16 @@ onUnmounted(() => {
             :deep(.card) {
                 width: 100%;
                 height: 50%;
-                padding: 3rem;
+                padding: 3rem 8rem;
 
                 display: flex;
-                justify-content: center;
-                align-items: center;
+                justify-content: flex-start;
+                align-items: flex-start;
                 flex-direction: column;
 
                 // background-color: rgba(156, 125, 125, 0.4);
+
+
             }
 
             &.active :deep(.skill-tag) {

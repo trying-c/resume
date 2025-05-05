@@ -5,7 +5,7 @@
 <template>
     <section>
         <div class="card">
-            <h2>技术能力</h2>
+            <h1>技术能力</h1>
             <div style="margin-top: 2rem;">
                 <span class="skill-tag">React</span>
                 <span class="skill-tag">Node.js</span>
