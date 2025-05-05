@@ -5,11 +5,11 @@ import Contact from '@/components/Contact.vue'
 import Projects from '@/components/Projects.vue'
 import { useStore } from '@/stores'
 import { computed, onMounted, onUnmounted, ref, shallowRef } from 'vue'
-import { throttle } from 'lodash'
+import { throttle, debounce } from 'lodash'
 
 const store = useStore()
 const content = ref(null)
-const contentRef = computed(() => content.value.$el)
+const contentRef = computed(() => content.value?.$el)
 const pages = ref([
     { name: 'home', component: shallowRef(Home), offsetTop: 0 },
     { name: 'skills', component: shallowRef(Skills), offsetTop: 0 },
@@ -20,7 +20,38 @@ const pageIndex = ref(0)
 const isScrolling = ref(false)
 const isScrollUp = ref(false)
 
-const handleWheel = (e) => {
+const isMobile = ref(false)
+const checkIsMobile = () => {
+    const userAgent = navigator.userAgent.toLowerCase()
+    const mobileKeywords = /mobile|android|iphone|ipad|ipod|blackberry|opera mini|windows phone/i
+    isMobile.value = mobileKeywords.test(userAgent) || window.innerWidth <= 768
+}
+
+/**
+ * 监听滚动事件
+ */
+const handleScroll = throttle(() => {
+    if (!isMobile.value || isScrolling.value) return
+
+    const scrollTop = contentRef.value.scrollTop
+    let index = pages.value.findIndex((page, i) => (
+        i === pages.value.length - 1
+            ? scrollTop >= page.offsetTop - 200
+            : scrollTop >= page.offsetTop - 200 && scrollTop < pages.value[i + 1].offsetTop - 200
+    ))
+    if (pageIndex.value != index && index !== -1) {
+        pageIndex.value = index
+    }
+
+    setTimeout(() => {
+        isScrolling.value = false
+    }, 500)
+}, 200)
+
+/**
+ * 监听滚轮事件
+ */
+const handleWheel = throttle((e) => {
     if (isScrolling.value) return
 
     isScrolling.value = true
@@ -40,8 +71,11 @@ const handleWheel = (e) => {
     setTimeout(() => {
         isScrolling.value = false
     }, 500)
-}
+}, 200);
 
+/**
+ * 滚动页面到对应页面
+ */
 const scrollToIndex = () => {
     contentRef.value.scrollTo({
         top: pages.value[pageIndex.value].offsetTop,
@@ -49,33 +83,38 @@ const scrollToIndex = () => {
     })
 }
 
+/**
+ * 上一页
+ */
 const toLast = () => {
     pageIndex.value--;
     scrollToIndex()
 }
-
+/**
+ * 下一页
+ */
 const toNext = () => {
     pageIndex.value++;
     scrollToIndex()
 }
-
+/**禁用上一页 */
 const leftBan = computed(() => pageIndex.value == 0);
+/**禁用下一页 */
 const rightBan = computed(() => pageIndex.value == pages.value.length - 1);
-
-
 
 onMounted(() => {
     document.querySelectorAll('.page').forEach((el, index) => {
         pages.value[index].offsetTop = el.offsetTop;
     })
-    window.addEventListener('wheel', throttle(handleWheel, 200), { passive: true })
+    checkIsMobile()
+    if (!isMobile.value)
+        window.addEventListener('wheel', handleWheel, { passive: true })
 })
 
 onUnmounted(() => {
-    window.removeEventListener('wheel', handleWheel)
+    if (!isMobile.value)
+        window.removeEventListener('wheel', handleWheel)
 })
-
-
 </script>
 
 <template>
@@ -89,8 +128,7 @@ onUnmounted(() => {
             <div class="resume-header-btns">
             </div>
         </Header>
-
-        <Content ref="content" class="resume-content">
+        <Content ref="content" class="resume-content" @scroll="handleScroll">
             <div class="resume-action">
                 <Button class="link__color" ghost type="text" icon="ios-arrow-back" :disabled="leftBan"
                     @click="toLast"></Button>
@@ -107,10 +145,11 @@ onUnmounted(() => {
 @for $i from 0 through 5 {
     .page_bgImg_#{$i} {
         background-image: url(./assets/images/#{4-$i}.png);
-        background-size: 100% 100%;
         background-attachment: fixed;
+        background-size: 100% 100%;
     }
 }
+
 
 /* 背景灰 */
 .resume {
