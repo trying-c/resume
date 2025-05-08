@@ -6,7 +6,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
     plugins: [vue()],
 
-    base: '/resume/', // 设置打包路径
+    base: './', // 设置打包路径
     server: {
         host: '0.0.0.0', // 允许外部访问
         open: true, // 启动服务后自动打开浏览器

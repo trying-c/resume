@@ -1,0 +1,106 @@
+{
+  "info": {
+    "name": "Trying Chung",
+    "email": "tryingchung@qq.com",
+    "phone": "+86 158 1581 5690",
+    "website": "https://trying-c.github.io",
+    "github": "https://github.com/trying-c",
+    "avatar": "@/assets/images/avatar.jpg"
+  },
+  "summary": "A passionate Front-End Developer with 3 years of experience in building responsive web applications using Vue3, JavaScript, and modern CSS. Seeking opportunities to contribute to innovative projects.",
+  "education": [
+    {
+      "school": "仲恺农业工程学院",
+      "degree": "本科",
+      "major": "信息与计算科学(软件工程)",
+      "period": "2016.09 - 2020.06",
+      "course": [
+        "数学分析",
+        "数据结构",
+        "Web程序设计",
+        "计算机网络原理",
+        "数据库原理与应用",
+        "软件结构与设计模式"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "company": "广州云景信息科技有限公司",
+      "position": "开发工程师",
+      "period": "2020.06 - 2023.08",
+      "responsibilities": [
+        "根据产品需求、UI设计稿完成前端开发任务",
+        "根据接口文档，完成前后端的数据接口联调",
+        "参与项目中对移动端部分的技术选型，以及Web前端开发规范化的制定",
+        "完成测试、验收过程中的Bug修复，解决原有功能的浏览器兼容问题"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "AI环保智慧眼平台",
+      "position": "开发工程师",
+      "period": "2022.05 - 2023.08",
+      "description": "A web application built with Vue3 and Vite, featuring dynamic data visualization and responsive design.",
+      "techStack": ["Vue3", "Vite", "TailwindCSS"]
+    },
+    {
+      "name": " 非道路监管系统平台",
+      "position": "开发工程师",
+      "period": "2021.02 - 2022.04",
+      "description": "A web application built with Vue3 and Vite, featuring dynamic data visualization and responsive design.",
+      "techStack": ["Vue3", "Vite", "TailwindCSS"]
+    },
+    {
+      "name": "大气与水质监测平台",
+      "position": "开发工程师",
+      "period": "2020.06 - 2021.01",
+      "description": "A web application built with Vue3 and Vite, featuring dynamic data visualization and responsive design.",
+      "techStack": ["Vue3", "Vite", "TailwindCSS"]
+    }
+  ],
+  "skills": [
+    {
+      "category": "前端",
+      "items": [
+        "Vue3",
+        "JavaScript",
+        "TypeScript",
+        "HTML5",
+        "CSS3",
+        "TailwindCSS"
+      ]
+    },
+    {
+      "category": "工程化",
+      "items": ["Vite", "Webpack", "Git", "VS Code"]
+    },
+    {
+      "category": "其他",
+      "items": [
+        "Responsive Design",
+        "Performance Optimization",
+        "Agile Methodology"
+      ]
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Certificate Name",
+      "issuer": "Issuing Organization",
+      "date": "2022.05",
+      "link": "https://certificate-link.com"
+    }
+  ],
+  "languages": [
+    {
+      "name": "Chinese",
+      "proficiency": "Native"
+    },
+    {
+      "name": "English",
+      "proficiency": "Fluent"
+    }
+  ]
+}

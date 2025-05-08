@@ -34,3 +34,136 @@ $typePoint: (
     }
   }
 }
+$primary-color: #bf9fff; // 香芋紫主色调
+$gradient-center: #b0a8e0; // 中心浅蓝紫色
+$gradient-edge: #e6e6fa; // 边缘浅紫灰色
+$text-color: #4b0082; // 深紫色文字
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: $text-color;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+
+  &::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: radial-gradient(
+      circle at center,
+      $gradient-center 0%,
+      $gradient-edge 50%,
+      rgba($gradient-edge, 0.5) 80%,
+      rgba($gradient-edge, 0.1) 100%
+    );
+    background-position: -200px;
+    z-index: -1;
+  }
+
+  &::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle at 30% 30%,
+      rgba($primary-color, 0.3) 0%,
+      rgba($primary-color, 0.1) 20%,
+      transparent 40%
+    );
+    opacity: 0.5;
+    z-index: -1;
+    animation: flow 20s infinite ease-in-out;
+    transform: translate(-25%, -25%) scale(.4);
+  }
+}
+
+@keyframes flow {
+  0% {
+    transform: translate(-25%, -25%) scale(.4);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(-20%, -30%) scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-25%, -25%) scale(.4);
+    opacity: 0.2;
+  }
+}
+
+@media (max-width: 768px) {
+  body::before {
+    background: radial-gradient(
+      circle at center,
+      $gradient-center 0%,
+      $gradient-edge 40%,
+      rgba($gradient-edge, 0.5) 70%,
+      rgba($gradient-edge, 0.1) 100%
+    );
+  }
+
+  body::after {
+    animation: flow-mobile 15s infinite ease-in-out;
+  }
+}
+
+@keyframes flow-mobile {
+  0% {
+    transform: translate(-25%, -25%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-22%, -28%) scale(1.05);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-25%, -25%) scale(1);
+    opacity: 0.5;
+  }
+}
+
+h1 {
+  color: $text-color; // 白色文字
+}
+
+$track-color: rgba($primary-color, 0.1); // 轨道使用香芋紫透明背景
+$thumb-color: rgba($gradient-center, 0.9); // 滑块使用香芋紫
+$thumb-hover-color: darken($primary-color, 15%); // 悬停时加深15%
+
+::-webkit-scrollbar {
+  width: 8px; // 滚动条宽度
+  height: 8px; // 水平滚动条高度
+}
+
+::-webkit-scrollbar-track {
+  background: $track-color; // 轨道背景，香芋紫透明
+  border-radius: 4px; // 圆角轨道
+}
+
+::-webkit-scrollbar-thumb {
+  background: $thumb-color; // 滑块背景，香芋紫
+  border-radius: 4px; // 圆角滑块
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // 轻微阴影
+  transition: background 0.3s ease; // 平滑过渡
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $thumb-hover-color; // 悬停时加深
+}
+
+@supports (scrollbar-width: thin) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: $thumb-color $track-color; // Firefox 滚动条颜色
+  }
+}
