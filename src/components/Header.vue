@@ -170,7 +170,7 @@ $indicator-color: #C4A7E7; // 更饱和的紫色指示器
     &-link {
         text-decoration: none;
         color: $text-color; // 深紫色文字
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: 500;
         transition: color 0.3s;
     }

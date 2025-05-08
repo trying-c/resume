@@ -40,6 +40,9 @@ defineProps({
         margin-bottom: 1rem;
         font-size: 2.8rem;
 
+        h1 {
+            font-family: kinkee, Learning Curve, Acorn, Roboto, "Helvetica Neue", sans-serif;
+        }
     }
 
     &__subtitle {
